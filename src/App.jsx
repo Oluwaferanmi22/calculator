@@ -1,107 +1,65 @@
-import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import "./index.css";
+import { useState } from "react";
 
-const TripForm = ({ onAdd }) => {
-  const [destination, setDestination] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [activities, setActivities] = useState("");
+function App() {
+  const [input, setInput] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onAdd({
-      id: uuidv4(),
-      destination,
-      startDate,
-      endDate,
-      activities: activities.split(",").map((a) => a.trim()),
-    });
-    setDestination("");
-    setStartDate("");
-    setEndDate("");
-    setActivities("");
+  const handleClick = (value) => {
+    setInput((prev) => prev + value);
+  };
+
+  const handleClear = () => {
+    setInput("");
+  };
+
+  const handleCalculate = () => {
+    try {
+      const result = eval(input);
+      setInput(result.toString());
+    } catch {
+      setInput("Error");
+    }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-xl shadow-md space-y-4"
-    >
-      <h2 className="text-xl font-semibold">Plan a New Trip</h2>
-      <input
-        type="text"
-        placeholder="Destination"
-        value={destination}
-        onChange={(e) => setDestination(e.target.value)}
-        className="w-full p-2 border rounded"
-        required
-      />
-      <div className="flex gap-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white shadow-lg rounded-lg p-6 w-80">
+        <h2 className="text-2xl font-bold mb-4 text-center">Calculator</h2>
         <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="w-full p-2 border rounded"
-          required
+          type="text"
+          value={input}
+          readOnly
+          className="w-full h-12 mb-4 text-right px-3 border rounded text-xl"
         />
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="w-full p-2 border rounded"
-          required
-        />
-      </div>
-      <textarea
-        placeholder="Activities (comma separated)"
-        value={activities}
-        onChange={(e) => setActivities(e.target.value)}
-        className="w-full p-2 border rounded"
-        rows={3}
-      />
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-      >
-        Add Trip
-      </button>
-    </form>
-  );
-};
+        <div className="grid grid-cols-4 gap-2">
+          <button onClick={() => handleClick("7")} className="btn">7</button>
+          <button onClick={() => handleClick("8")} className="btn">8</button>
+          <button onClick={() => handleClick("9")} className="btn">9</button>
+          <button onClick={() => handleClick("/")} className="btn bg-orange-400 text-white">÷</button>
 
-const TripCard = ({ trip }) => (
-  <div className="bg-white p-4 rounded shadow-md">
-    <h3 className="text-lg font-bold text-blue-800">{trip.destination}</h3>
-    <p className="text-sm text-gray-500">
-      {trip.startDate} → {trip.endDate}
-    </p>
-    <ul className="list-disc pl-4 mt-2 text-sm">
-      {trip.activities.map((act, i) => (
-        <li key={i}>{act}</li>
-      ))}
-    </ul>
-  </div>
-);
+          <button onClick={() => handleClick("4")} className="btn">4</button>
+          <button onClick={() => handleClick("5")} className="btn">5</button>
+          <button onClick={() => handleClick("6")} className="btn">6</button>
+          <button onClick={() => handleClick("*")} className="btn bg-orange-400 text-white">×</button>
 
-export default function App() {
-  const [trips, setTrips] = useState([]);
+          <button onClick={() => handleClick("1")} className="btn">1</button>
+          <button onClick={() => handleClick("2")} className="btn">2</button>
+          <button onClick={() => handleClick("3")} className="btn">3</button>
+          <button onClick={() => handleClick("-")} className="btn bg-orange-400 text-white">−</button>
 
-  const addTrip = (trip) => setTrips([...trips, trip]);
-
-  return (
-    <div className="min-h-screen bg-blue-50 p-6">
-      <h1 className="text-3xl font-bold text-center mb-8 text-blue-900">
-        🧳 Trip Planner
-      </h1>
-      <div className="max-w-3xl mx-auto space-y-10">
-        <TripForm onAdd={addTrip} />
-        <div className="grid gap-4 md:grid-cols-2">
-          {trips.map((trip) => (
-            <TripCard key={trip.id} trip={trip} />
-          ))}
+          <button onClick={() => handleClick("0")} className="btn">0</button>
+          <button onClick={() => handleClick(".")} className="btn">.</button>
+          <button onClick={handleCalculate} className="btn bg-green-500 text-white">=</button>
+          <button onClick={() => handleClick("+")} className="btn bg-orange-400 text-white">+</button>
         </div>
+        <button
+          onClick={handleClear}
+          className="mt-4 w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition"
+        >
+          Clear
+        </button>
       </div>
     </div>
   );
 }
+
+export default App;
